@@ -1,25 +1,36 @@
+import os
 import telebot
-import random
-import re
 
-TOKEN = "8632983518:AAEdhcYLq0MfvN6Uw1_BVpLDLlCzxmyNKMI"
+TOKEN = os.getenv("BOT_TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=["start"])
 def start(message):
-    bot.reply_to(message, "✅ أرسل زوج العملات مع الفريم.\nمثال:\nEUR/USD M1")
+    bot.reply_to(
+        message,
+        "أرسل مثلاً:\nEUR/USD M1"
+    )
 
 @bot.message_handler(func=lambda m: True)
-def signal(message):
+def analyze(message):
     text = message.text.upper().strip()
 
-    pattern = r"^[A-Z]{3}/[A-Z]{3}\s+(M1|M5|M15|M30|H1)$"
+    # هنا تضيف:
+    # 1. قراءة الزوج والفريم.
+    # 2. جلب البيانات من Twelve Data.
+    # 3. حساب EMA وRSI وMACD.
+    # 4. إرسال النتائج للمستخدم.
 
-    if re.match(pattern, text):
-        signal = random.choice(["📈 BUY", "📉 SELL"])
-        bot.reply_to(message, f"{text}\n\n{signal}")
-    else:
-        bot.reply_to(message, "❌ مثال صحيح:\nEUR/USD M1")
+    report = (
+        "📊 التحليل الفني\n\n"
+        "EMA(9): ...\n"
+        "EMA(21): ...\n"
+        "RSI(14): ...\n"
+        "MACD: ...\n"
+        "MACD Signal: ..."
+    )
+
+    bot.reply_to(message, report)
 
 bot.infinity_polling()
