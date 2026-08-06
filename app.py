@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, jsonify
 from analysis import analyze_market
 
-app = Flask(__liamsi-trading__)
+app = Flask(__name__)
 
 @app.route("/")
 def home():
