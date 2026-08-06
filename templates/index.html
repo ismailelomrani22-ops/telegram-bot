@@ -1,0 +1,43 @@
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading Dashboard</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 AI Trading Dashboard</h1>
+
+    <div class="card">
+
+        <label>زوج العملات</label>
+
+        <select id="pair">
+            <option>EUR/USD</option>
+            <option>GBP/USD</option>
+            <option>USD/JPY</option>
+            <option>XAU/USD</option>
+            <option>BTC/USD</option>
+        </select>
+
+        <label>الفريم</label>
+
+        <select id="timeframe">
+            <option>M1</option>
+            <option>M5</option>
+            <option>M15</option>
+            <option>M30</option>
+            <option>H1</option>
+            <option>H4</option>
+        </select>
+
+        <button onclick="analyze()">
+            📊 تحليل
+        </button>
+
+    </div>
