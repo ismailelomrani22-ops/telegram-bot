@@ -1,116 +1,52 @@
 import os
-import re
-import requests
-import pandas as pd
 import telebot
+from analysis import analyze_market
 
-from ta.trend import EMAIndicator, MACD
-from ta.momentum import RSIIndicator
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-TOKEN = os.getenv("BOT_TOKEN") or "PUT_YOUR_BOT_TOKEN_HERE"
-API_KEY = os.getenv("TWELVEDATA_API_KEY") or "PUT_YOUR_API_KEY_HERE"
-
-bot = telebot.TeleBot(TOKEN)
-
-TIMEFRAME_MAP = {
-    "M1": "1min",
-    "M5": "5min",
-    "M15": "15min",
-    "M30": "30min",
-    "H1": "1h",
-    "H4": "4h"
-}
-
-
-def get_indicators(symbol, tf):
-    interval = TIMEFRAME_MAP.get(tf)
-
-    url = (
-        "https://api.twelvedata.com/time_series"
-        f"?symbol={symbol}"
-        f"&interval={interval}"
-        "&outputsize=100"
-        f"&apikey={API_KEY}"
-    )
-
-    r = requests.get(url, timeout=15)
-    data = r.json()
-
-    if "values" not in data:
-        return None
-
-    df = pd.DataFrame(data["values"])
-
-    df["close"] = df["close"].astype(float)
-    df = df.iloc[::-1]
-
-    ema9 = EMAIndicator(df["close"], window=9).ema_indicator().iloc[-1]
-    ema21 = EMAIndicator(df["close"], window=21).ema_indicator().iloc[-1]
-
-    rsi = RSIIndicator(df["close"], window=14).rsi().iloc[-1]
-
-    macd = MACD(df["close"])
-    macd_value = macd.macd().iloc[-1]
-    signal = macd.macd_signal().iloc[-1]
-
-    price = df["close"].iloc[-1]
-
-    return {
-        "price": price,
-        "ema9": ema9,
-        "ema21": ema21,
-        "rsi": rsi,
-        "macd": macd_value,
-        "signal": signal
-    }
+bot = telebot.TeleBot(BOT_TOKEN)
 
 
 @bot.message_handler(commands=["start"])
 def start(message):
     bot.reply_to(
         message,
-        "أرسل زوج العملات والفريم.\n\n"
+        "🤖 مرحباً بك\n\n"
+        "أرسل الزوج والفريم.\n\n"
         "مثال:\n"
-        "EUR/USD M1\n"
-        "GBP/USD M5"
+        "EUR/USD M1"
     )
 
 
 @bot.message_handler(func=lambda m: True)
 def analyze(message):
 
-    text = message.text.upper().strip()
+    try:
+        text = message.text.upper().strip()
 
-    pattern = r"^([A-Z]{3})/([A-Z]{3})\s+(M1|M5|M15|M30|H1|H4)$"
+        pair, timeframe = text.split()
 
-    match = re.match(pattern, text)
+        result = analyze_market(pair, timeframe)
 
-    if not match:
-        bot.reply_to(message, "الصيغة غير صحيحة.")
-        return
+        if result["status"] != "success":
+            bot.reply_to(message, result["message"])
+            return
 
-    base = match.group(1)
-    quote = match.group(2)
-    tf = match.group(3)
+        reply = f"""
+📊 التحليل الفني
 
-    symbol = f"{base}/{quote}"
+💱 الزوج: {result['pair']}
+⏱️ الفريم: {result['timeframe']}
 
-    result = get_indicators(symbol, tf)
-
-    if result is None:
-        bot.reply_to(message, "تعذر جلب البيانات.")
-        return
-
-    reply = f"""
-📊 {symbol} ({tf})
+━━━━━━━━━━━━━━
 
 💰 السعر:
 {result['price']:.5f}
 
-📈 EMA 9:
+📈 EMA9:
 {result['ema9']:.5f}
 
-📈 EMA 21:
+📈 EMA21:
 {result['ema21']:.5f}
 
 📉 RSI:
@@ -119,12 +55,38 @@ def analyze(message):
 📊 MACD:
 {result['macd']:.5f}
 
-📊 MACD Signal:
+📊 Signal:
 {result['signal']:.5f}
+
+━━━━━━━━━━━━━━
+
+🟢 الدعم:
+{result['support']:.5f}
+
+🔴 المقاومة:
+{result['resistance']:.5f}
+
+━━━━━━━━━━━━━━
+
+📈 الاتجاه:
+{result['trend']}
+
+📝 الملخص:
+
 """
 
-    bot.reply_to(message, reply)
+        for item in result["summary"]:
+            reply += f"• {item}\n"
+
+        bot.reply_to(message, reply)
+
+    except Exception:
+        bot.reply_to(
+            message,
+            "❌ الصيغة الصحيحة:\n\nEUR/USD M1"
+        )
 
 
 print("Bot Started...")
-bot.infinity_polling()
+
+bot.infinity_polling(skip_pending=True)
