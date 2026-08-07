@@ -17,59 +17,38 @@ TIMEFRAME_MAP = {
 
 def get_market_data(symbol, timeframe):
 
-    interval = TIMEFRAME_MAP.get(timeframe)
+    interval = TIMEFRAME_MAP.get(timeframe, "1min")
 
-    if interval is None:
-        print(f"❌ Invalid timeframe: {timeframe}")
-        return None
+    symbol = symbol.replace("/", "")
 
-    if not API_KEY:
-        print("❌ TWELVEDATA_API_KEY is missing.")
-        return None
-
-    url = "https://api.twelvedata.com/time_series"
-
-    params = {
-        "symbol": symbol,
-        "interval": interval,
-        "outputsize": 200,
-        "apikey": API_KEY
-    }
+    url = (
+        f"https://api.twelvedata.com/time_series"
+        f"?symbol={symbol}"
+        f"&interval={interval}"
+        f"&outputsize=250"
+        f"&apikey={API_KEY}"
+    )
 
     try:
 
-        response = requests.get(url, params=params, timeout=20)
-        response.raise_for_status()
-
-        data = response.json()
-
-        print("API Response:", data)
+        r = requests.get(url, timeout=15)
+        data = r.json()
 
         if "values" not in data:
-            print("❌ API Error:", data)
+            print(data)
             return None
 
         df = pd.DataFrame(data["values"])
 
         df = df.iloc[::-1].reset_index(drop=True)
 
-        numeric_columns = ["open", "high", "low", "close"]
+        cols = ["open", "high", "low", "close"]
 
-        for col in numeric_columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-        df.dropna(inplace=True)
-
-        if df.empty:
-            print("❌ No valid market data.")
-            return None
+        for c in cols:
+            df[c] = df[c].astype(float)
 
         return df
 
-    except requests.exceptions.RequestException as e:
-        print("❌ Network Error:", e)
-        return None
-
     except Exception as e:
-        print("❌ Unexpected Error:", e)
+        print("DATA ERROR:", e)
         return None
