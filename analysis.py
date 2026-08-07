@@ -1,112 +1,142 @@
+import time
 from data import get_market_data
 from indicators import calculate_indicators
 
 
 def analyze_market(symbol, timeframe):
 
+    # محاكاة تحليل احترافي
+    time.sleep(3)
+
     df = get_market_data(symbol, timeframe)
 
-    if df is None:
+    if df is None or len(df) < 60:
         return {
             "status": "error",
             "message": "Market data unavailable"
         }
 
-    result = calculate_indicators(df)
+    r = calculate_indicators(df)
 
-    score_buy = 0
-    score_sell = 0
+    buy = 0
+    sell = 0
 
     # EMA
-    if result["ema9"] > result["ema21"]:
-        score_buy += 2
-    elif result["ema9"] < result["ema21"]:
-        score_sell += 2
+    if r["ema9"] > r["ema21"]:
+        buy += 2
+    else:
+        sell += 2
+
+    if r["ema21"] > r["ema50"]:
+        buy += 2
+    else:
+        sell += 2
 
     # RSI
-    if result["rsi"] < 35:
-        score_buy += 2
-    elif result["rsi"] > 65:
-        score_sell += 2
-    elif 45 <= result["rsi"] <= 55:
-        score_buy += 1
-        score_sell += 1
+    if 45 <= r["rsi"] <= 65:
+        buy += 1
+
+    if r["rsi"] < 30:
+        buy += 2
+
+    if r["rsi"] > 70:
+        sell += 2
 
     # MACD
-    if result["macd"] > result["signal"]:
-        score_buy += 2
-    elif result["macd"] < result["signal"]:
-        score_sell += 2
+    if r["macd"] > r["signal"]:
+        buy += 2
+    else:
+        sell += 2
 
     # ADX
-    if result["adx"] > 25:
-        if score_buy > score_sell:
-            score_buy += 1
-        elif score_sell > score_buy:
-            score_sell += 1
+    if r["adx"] > 25:
+        buy += 1
+        sell += 1
 
-    # STOCHASTIC
-    if result["stoch_k"] > result["stoch_d"]:
-        score_buy += 1
+    # CCI
+    if r["cci"] > 100:
+        buy += 1
+
+    if r["cci"] < -100:
+        sell += 1
+
+    # Williams
+    if r["williams"] < -80:
+        buy += 1
+
+    if r["williams"] > -20:
+        sell += 1
+
+    # SAR
+    if r["price"] > r["psar"]:
+        buy += 2
     else:
-        score_sell += 1
+        sell += 2
 
-    # PRICE
-    if result["price"] > result["ema9"]:
-        score_buy += 1
+    # Bollinger
+    if r["price"] <= r["lower"]:
+        buy += 1
+
+    if r["price"] >= r["upper"]:
+        sell += 1
+
+    # Stochastic
+    if r["stoch_k"] > r["stoch_d"]:
+        buy += 1
     else:
-        score_sell += 1
+        sell += 1
 
-    # SUPPORT / RESISTANCE
-    if result["price"] <= result["support"] * 1.001:
-        score_buy += 1
+    # Support / Resistance
+    if r["price"] <= r["support"] * 1.001:
+        buy += 1
 
-    if result["price"] >= result["resistance"] * 0.999:
-        score_sell += 1
+    if r["price"] >= r["resistance"] * 0.999:
+        sell += 1
 
-    if score_buy >= 7:
+    # Price Action
+    last = df.iloc[-1]
+    prev = df.iloc[-2]
+
+    if last["close"] > last["open"] and prev["close"] > prev["open"]:
+        buy += 2
+
+    if last["close"] < last["open"] and prev["close"] < prev["open"]:
+        sell += 2
+
+    # القرار
+    if buy >= sell + 3:
+        signal = "BUY"
         trend = "Bullish"
-        trade = "BUY"
-        confidence = min(99, 70 + score_buy * 3)
+        confidence = min(99, 60 + buy * 3)
 
-    elif score_sell >= 7:
+    elif sell >= buy + 3:
+        signal = "SELL"
         trend = "Bearish"
-        trade = "SELL"
-        confidence = min(99, 70 + score_sell * 3)
+        confidence = min(99, 60 + sell * 3)
 
     else:
+        signal = "WAIT"
         trend = "Neutral"
-        trade = "WAIT"
         confidence = 50
 
     return {
-
         "status": "success",
-
         "pair": symbol,
-
         "timeframe": timeframe,
-
-        "price": result["price"],
-
-        "ema9": result["ema9"],
-
-        "ema21": result["ema21"],
-
-        "rsi": result["rsi"],
-
-        "macd": result["macd"],
-
-        "signal": result["signal"],
-
-        "support": result["support"],
-
-        "resistance": result["resistance"],
-
+        "price": r["price"],
+        "ema9": r["ema9"],
+        "ema21": r["ema21"],
+        "ema50": r["ema50"],
+        "rsi": r["rsi"],
+        "macd": r["macd"],
+        "signal": r["signal"],
+        "adx": r["adx"],
+        "cci": r["cci"],
+        "williams": r["williams"],
+        "psar": r["psar"],
+        "support": r["support"],
+        "resistance": r["resistance"],
         "trend": trend,
-
-        "trade": trade,
-
+        "trade": signal,
         "confidence": confidence
-
     }
