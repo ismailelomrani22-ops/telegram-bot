@@ -1,81 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading Bot</title>
 
-    <link rel="stylesheet" href="/static/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LIAMSI AI BOT</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>🤖 AI Trading Bot</h1>
+<div class="logo">
 
-    <div class="card">
+<h1>🤖 LIAMSI AI BOT</h1>
 
-        <label>Market</label>
-        <select id="market">
-            <option value="forex">Forex</option>
-            <option value="otc">OTC</option>
-        </select>
+<p>Professional AI Trading Signals</p>
 
-        <label>Currency Pair</label>
-        <select id="pair">
-            <option>EUR/USD</option>
-            <option>GBP/USD</option>
-            <option>USD/JPY</option>
-            <option>AUD/USD</option>
-            <option>USD/CAD</option>
-        </select>
+</div>
 
-        <label>Timeframe</label>
-        <select id="timeframe">
-            <option>M1</option>
-            <option>M5</option>
-            <option>M15</option>
-            <option>M30</option>
-            <option>H1</option>
-        </select>
+<div class="panel">
 
-        <button id="signalBtn">
-            ⚡ Get Signal
-        </button>
+<label>Market</label>
 
-    </div>
+<select id="market">
 
-    <div class="result">
+<option>Forex</option>
 
-        <h2>Analysis</h2>
+<option>OTC</option>
 
-        <div id="signal">---</div>
+</select>
 
-        <p>EMA 9 :
-            <span id="ema9">--</span>
-        </p>
+<label>Currency Pair</label>
 
-        <p>EMA 21 :
-            <span id="ema21">--</span>
-        </p>
+<select id="pair">
 
-        <p>RSI :
-            <span id="rsi">--</span>
-        </p>
+<option>EUR/USD</option>
+<option>GBP/USD</option>
+<option>USD/JPY</option>
+<option>USD/CAD</option>
+<option>AUD/USD</option>
+<option>XAU/USD</option>
 
-        <p>MACD :
-            <span id="macd">--</span>
-        </p>
+</select>
 
-        <p>Support :
-            <span id="support">--</span>
-        </p>
+<label>Timeframe</label>
 
-        <p>Resistance :
-            <span id="resistance">--</span>
-        </p>
+<select id="timeframe">
 
-    </div>
+<option>M1</option>
+<option>M5</option>
+<option>M15</option>
+<option>M30</option>
+<option>H1</option>
+
+</select>
+
+<button id="signalBtn">
+
+⚡ GET SIGNAL
+
+</button>
+
+</div>
+
+<div class="result">
+
+<h2>Analysis Result</h2>
+
+<div id="signal">
+
+WAITING...
+
+</div>
+
+<div class="grid">
+
+<div class="box">
+
+Price
+
+<span id="price">--</span>
+
+</div>
+
+<div class="box">
+
+EMA 9
+
+<span id="ema9">--</span>
+
+</div>
+
+<div class="box">
+
+EMA 21
+
+<span id="ema21">--</span>
+
+</div>
+
+<div class="box">
+
+RSI
+
+<span id="rsi">--</span>
+
+</div>
+
+<div class="box">
+
+MACD
+
+<span id="macd">--</span>
+
+</div>
+
+<div class="box">
+
+Support
+
+<span id="support">--</span>
+
+</div>
+
+<div class="box">
+
+Resistance
+
+<span id="resistance">--</span>
+
+</div>
+
+<div class="box">
+
+Trend
+
+<span id="trend">--</span>
+
+</div>
+
+</div>
+
+</div>
+
+<a class="telegram"
+
+href="https://t.me/liamsi_ai_bot"
+
+target="_blank">
+
+🚀 OPEN TELEGRAM BOT
+
+</a>
 
 </div>
 
