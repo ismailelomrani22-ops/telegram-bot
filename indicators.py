@@ -1,5 +1,3 @@
-import pandas as pd
-
 from ta.trend import EMAIndicator, MACD, ADXIndicator
 from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.volatility import BollingerBands, AverageTrueRange
@@ -36,28 +34,26 @@ def calculate_indicators(df):
     resistance = high.tail(20).max()
 
     return {
+        "price": float(close.iloc[-1]),
 
-        "price": close.iloc[-1],
+        "ema9": float(ema9),
+        "ema21": float(ema21),
 
-        "ema9": ema9,
-        "ema21": ema21,
+        "rsi": float(rsi),
 
-        "rsi": rsi,
+        "macd": float(macd_line),
+        "signal": float(signal),
 
-        "macd": macd_line,
-        "signal": signal,
+        "upper": float(upper),
+        "lower": float(lower),
 
-        "upper": upper,
-        "lower": lower,
+        "adx": float(adx),
 
-        "adx": adx,
+        "stoch_k": float(stoch_k),
+        "stoch_d": float(stoch_d),
 
-        "stoch_k": stoch_k,
-        "stoch_d": stoch_d,
+        "atr": float(atr),
 
-        "atr": atr,
-
-        "support": support,
-        "resistance": resistance
-
+        "support": float(support),
+        "resistance": float(resistance)
     }
