@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return """... HTML ..."""
+    return """
 <!DOCTYPE html>
 <html lang="en">
 <head>
