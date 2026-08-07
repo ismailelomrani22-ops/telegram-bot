@@ -29,7 +29,7 @@ def get_market_data(symbol, timeframe):
         f"https://api.twelvedata.com/time_series"
         f"?symbol={symbol}"
         f"&interval={interval}"
-        f"&outputsize=250"
+        f"&outputsize=300"
         f"&apikey={API_KEY}"
     )
 
