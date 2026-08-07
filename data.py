@@ -14,22 +14,16 @@ TIMEFRAME_MAP = {
     "D1": "1day"
 }
 
-SYMBOLS = {
-    "EUR/USD": "EUR/USD",
-    "GBP/USD": "GBP/USD",
-    "AUD/USD": "AUD/USD",
-    "NZD/USD": "NZD/USD",
-    "USD/JPY": "USD/JPY",
-    "USD/CAD": "USD/CAD",
-    "USD/CHF": "USD/CHF",
-    "XAU/USD": "XAU/USD",
-}
-
 
 def get_market_data(symbol, timeframe):
-    interval = TIMEFRAME_MAP.get(timeframe, "1min")
 
-    symbol = SYMBOLS.get(symbol, symbol)
+    interval = TIMEFRAME_MAP.get(timeframe)
+
+    if interval is None:
+        return None
+
+    # إزالة كلمة OTC إذا كانت موجودة
+    symbol = symbol.replace(" OTC", "").replace("_OTC", "").strip()
 
     url = (
         f"https://api.twelvedata.com/time_series"
@@ -40,19 +34,27 @@ def get_market_data(symbol, timeframe):
     )
 
     try:
-        r = requests.get(url, timeout=15)
-        data = r.json()
 
-        print(data)
+        response = requests.get(url, timeout=15)
+        data = response.json()
 
         if "values" not in data:
+            print("API ERROR:", data)
             return None
 
         df = pd.DataFrame(data["values"])
+
         df = df.iloc[::-1].reset_index(drop=True)
 
-        for c in ["open", "high", "low", "close"]:
-            df[c] = df[c].astype(float)
+        numeric_columns = [
+            "open",
+            "high",
+            "low",
+            "close"
+        ]
+
+        for col in numeric_columns:
+            df[col] = df[col].astype(float)
 
         return df
 
