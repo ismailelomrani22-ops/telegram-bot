@@ -16,7 +16,6 @@ def analyze_market(symbol, timeframe):
         }
 
     r = calculate_indicators(df)
-
         print("INDICATORS:", r)
 
     buy = 0
