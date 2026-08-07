@@ -3,84 +3,153 @@ async function analyze() {
     const pair = document.getElementById("pair").value;
     const timeframe = document.getElementById("timeframe").value;
 
-    const response = await fetch("/analyze", {
+    const button = document.querySelector(".controls button");
+    button.disabled = true;
+    button.innerHTML = "⏳ Analyzing...";
 
-        method: "POST",
+    try {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        const response = await fetch("/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                pair: pair,
+                timeframe: timeframe
+            })
+        });
 
-        body: JSON.stringify({
+        const data = await response.json();
 
-            pair: pair,
-            timeframe: timeframe
+        if (data.status !== "success") {
+            alert(data.message);
+            return;
+        }
 
-        })
+        document.getElementById("pairName").innerText =
+            data.pair + " | " + data.timeframe;
 
-    });
+        document.getElementById("price").innerText =
+            Number(data.price).toFixed(5);
 
-    const data = await response.json();
+        document.getElementById("ema").innerText =
+            Number(data.ema50).toFixed(5);
 
-    if (data.status !== "success") {
+        document.getElementById("rsi").innerText =
+            Number(data.rsi).toFixed(2);
 
-        alert(data.message);
-        return;
+        document.getElementById("macd").innerText =
+            Number(data.macd).toFixed(5);
+
+        document.getElementById("adx").innerText =
+            Number(data.adx).toFixed(2);
+
+        document.getElementById("cci").innerText =
+            Number(data.cci).toFixed(2);
+
+        document.getElementById("support").innerText =
+            Number(data.support).toFixed(5);
+
+        document.getElementById("resistance").innerText =
+            Number(data.resistance).toFixed(5);
+
+        document.getElementById("trend").innerText =
+            data.trend;
+
+        animateConfidence(data.confidence);
+
+        updateSignal(data.trade);
+
+        updateChart(pair, timeframe);
+
+    } catch (e) {
+
+        alert("Server Error");
+
+        console.log(e);
 
     }
 
-    document.getElementById("pairName").innerText =
-        data.pair + " | " + data.timeframe;
+    button.disabled = false;
+    button.innerHTML = "⚡ Analyze";
 
-    document.getElementById("price").innerText =
-        data.price;
+}
 
-    document.getElementById("trend").innerText =
-        data.trend;
+function updateSignal(signal) {
 
-    document.getElementById("confidence").innerText =
-        data.confidence + "%";
+    const box = document.getElementById("signal");
 
-    document.getElementById("signal").innerText =
-        data.trade;
+    box.innerHTML = signal;
 
-    const signal = document.getElementById("signal");
+    box.classList.remove("buy");
+    box.classList.remove("sell");
+    box.classList.remove("wait");
 
-    signal.classList.remove("buy", "sell", "wait");
+    if (signal === "BUY") {
 
-    if (data.trade === "BUY") {
+        box.classList.add("buy");
 
-        signal.classList.add("buy");
+    } else if (signal === "SELL") {
 
-    } else if (data.trade === "SELL") {
-
-        signal.classList.add("sell");
+        box.classList.add("sell");
 
     } else {
 
-        signal.classList.add("wait");
+        box.classList.add("wait");
 
     }
 
-    document.getElementById("ema").innerText =
-        data.ema50.toFixed(5);
+}
 
-    document.getElementById("rsi").innerText =
-        data.rsi.toFixed(2);
+function animateConfidence(target) {
 
-    document.getElementById("macd").innerText =
-        data.macd.toFixed(5);
+    let value = 0;
 
-    document.getElementById("adx").innerText =
-        data.adx.toFixed(2);
+    const label = document.getElementById("confidence");
 
-    document.getElementById("cci").innerText =
-        data.cci.toFixed(2);
+    const timer = setInterval(() => {
 
-    document.getElementById("support").innerText =
-        data.support.toFixed(5);
+        value++;
 
-    document.getElementById("resistance").innerText =
-        data.resistance.toFixed(5);
+        label.innerHTML = value + "%";
+
+        if (value >= target) {
+
+            clearInterval(timer);
+
+        }
+
+    }, 20);
 
 }
+
+function updateChart(pair, timeframe) {
+
+    const map = {
+
+        "EUR/USD":"FX:EURUSD",
+        "GBP/USD":"FX:GBPUSD",
+        "USD/JPY":"FX:USDJPY",
+        "EUR/JPY":"FX:EURJPY",
+        "AUD/USD":"FX:AUDUSD",
+        "USD/CAD":"FX:USDCAD",
+        "USD/CHF":"FX:USDCHF",
+        "BTC/USD":"BINANCE:BTCUSDT",
+        "ETH/USD":"BINANCE:ETHUSDT",
+        "XAU/USD":"OANDA:XAUUSD"
+
+    };
+
+    const symbol = map[pair] || "FX:EURUSD";
+
+    document.querySelector(".chart-box iframe").src =
+        `https://s.tradingview.com/widgetembed/?symbol=${symbol}&interval=1&theme=dark&style=1`;
+
+}
+
+setInterval(() => {
+
+    analyze();
+
+}, 60000);
