@@ -129,9 +129,6 @@ target="_blank">
 <footer>
 © 2026 Telegram Trading Bot
 </footer>
-<footer>
-© 2026 Telegram Trading Bot
-</footer>
 
 </body>
 </html>
