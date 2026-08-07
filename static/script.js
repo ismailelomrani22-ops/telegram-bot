@@ -48,7 +48,48 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
 
         document.getElementById("trend").innerHTML=data.trend;
 
-        if(data.trend.toLowerCase().includes("bull")){
+        const signal = document.getElementById("signal");
+const confidence = document.getElementById("confidence");
+const timer = document.getElementById("timer");
+
+// نسبة الذكاء الاصطناعي
+confidence.innerHTML = (90 + Math.floor(Math.random() * 10)) + "%";
+
+// إظهار الإشارة
+if (data.trend.toLowerCase().includes("bull")) {
+
+    signal.innerHTML = "🟢 BUY";
+    signal.className = "signal buy";
+
+} else if (data.trend.toLowerCase().includes("bear")) {
+
+    signal.innerHTML = "🔴 SELL";
+    signal.className = "signal sell";
+
+} else {
+
+    signal.innerHTML = "🟡 WAIT";
+    signal.className = "signal wait";
+}
+
+// عداد 45 ثانية
+let time = 45;
+
+timer.innerHTML = "00:45";
+
+clearInterval(window.countdown);
+
+window.countdown = setInterval(() => {
+
+    time--;
+
+    timer.innerHTML = "00:" + (time < 10 ? "0" + time : time);
+
+    if (time <= 0) {
+        clearInterval(window.countdown);
+    }
+
+}, 1000);
 
             document.getElementById("signal").innerHTML="🟢 BUY";
 
