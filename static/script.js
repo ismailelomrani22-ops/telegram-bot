@@ -43,7 +43,7 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
         document.getElementById("resistance").innerHTML = Number(data.resistance).toFixed(5);
         document.getElementById("trend").innerHTML = data.trend;
 
-        confidence.innerHTML = (90 + Math.floor(Math.random() * 10)) + "%";
+        confidence.innerHTML = data.confidence + "%";
 
         const trend = data.trend.toLowerCase();
 
