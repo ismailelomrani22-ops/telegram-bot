@@ -120,7 +120,9 @@ Open Telegram Bot
 </div>
 </div>
 
-<a class="button" href="https://t.me/liamsi_ai_bot" target="_blank">
+<a class="button" 
+href="https://t.me/liamsi_ai_bot" 
+target="_blank">
 🚀 Open Telegram Bot
 <a
 
