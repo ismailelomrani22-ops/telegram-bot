@@ -2,7 +2,8 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
 
     const pair = document.getElementById("pair").value;
     const timeframe = document.getElementById("timeframe").value;
-    const market = document.getElementById("market").value;
+
+    document.getElementById("pairName").innerHTML = pair;
 
     const signal = document.getElementById("signal");
     const confidence = document.getElementById("confidence");
@@ -19,8 +20,8 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                pair: pair,
-                timeframe: timeframe
+                pair,
+                timeframe
             })
         });
 
@@ -30,9 +31,6 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
             signal.innerHTML = "❌ ERROR";
             return;
         }
-
-        document.getElementById("pairName").innerHTML =
-            pair + (market === "OTC" ? " OTC" : "");
 
         document.getElementById("price").innerHTML = Number(data.price).toFixed(5);
         document.getElementById("ema9").innerHTML = Number(data.ema9).toFixed(5);
@@ -45,12 +43,10 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
 
         confidence.innerHTML = data.confidence + "%";
 
-        const trend = data.trend.toLowerCase();
-
-        if (trend.includes("صاعد") || trend.includes("bull")) {
+        if (data.trade === "BUY") {
             signal.innerHTML = "🟢 BUY";
             signal.className = "signal buy";
-        } else if (trend.includes("هابط") || trend.includes("bear")) {
+        } else if (data.trade === "SELL") {
             signal.innerHTML = "🔴 SELL";
             signal.className = "signal sell";
         } else {
@@ -59,21 +55,32 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
         }
 
         let time = 45;
+
         timer.innerHTML = "00:45";
 
         clearInterval(window.countdown);
 
         window.countdown = setInterval(() => {
-            time--;
-            timer.innerHTML = "00:" + (time < 10 ? "0" + time : time);
 
-            if (time <= 0) clearInterval(window.countdown);
+            time--;
+
+            timer.innerHTML =
+                "00:" + (time < 10 ? "0" + time : time);
+
+            if (time <= 0) {
+
+                clearInterval(window.countdown);
+
+            }
 
         }, 1000);
 
     } catch (err) {
-        console.error(err);
+
+        console.log(err);
+
         signal.innerHTML = "❌ SERVER ERROR";
+
     }
 
 });
