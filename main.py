@@ -97,8 +97,12 @@ def analyze(message):
 
 
 def run_bot():
-
-    bot.infinity_polling(skip_pending=True)
+    bot.remove_webhook()
+    bot.infinity_polling(
+        skip_pending=True,
+        timeout=30,
+        long_polling_timeout=30
+    )
 
 
 threading.Thread(target=run_bot).start()
