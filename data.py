@@ -22,42 +22,40 @@ def get_market_data(symbol, timeframe):
     if interval is None:
         return None
 
-    # إزالة كلمة OTC إذا كانت موجودة
     symbol = symbol.replace(" OTC", "").replace("_OTC", "").strip()
 
     url = (
-        f"https://api.twelvedata.com/time_series"
+        "https://api.twelvedata.com/time_series"
         f"?symbol={symbol}"
         f"&interval={interval}"
-        f"&outputsize=300"
+        "&outputsize=350"
         f"&apikey={API_KEY}"
     )
 
     try:
 
-        response = requests.get(url, timeout=15)
+        response = requests.get(url, timeout=20)
         data = response.json()
 
         if "values" not in data:
-            print("API ERROR:", data)
+            print(data)
             return None
 
         df = pd.DataFrame(data["values"])
 
         df = df.iloc[::-1].reset_index(drop=True)
 
-        numeric_columns = [
-            "open",
-            "high",
-            "low",
-            "close"
-        ]
+        for col in ["open", "high", "low", "close"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
 
-        for col in numeric_columns:
-            df[col] = df[col].astype(float)
+        df = df.dropna()
+
+        if len(df) < 250:
+            print("Not enough candles")
+            return None
 
         return df
 
     except Exception as e:
-        print("DATA ERROR:", e)
+        print(e)
         return None
