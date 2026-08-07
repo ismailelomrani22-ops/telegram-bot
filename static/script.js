@@ -1,7 +1,12 @@
 async function analyze() {
 
-    const pair = document.getElementById("pair").value;
+    let pair = document.getElementById("pair").value;
     const timeframe = document.getElementById("timeframe").value;
+
+    const displayPair = pair;
+
+    // تحويل OTC إلى الزوج العادي قبل الإرسال
+    pair = pair.replace(" OTC", "").replace("_OTC", "");
 
     const button = document.querySelector(".controls button");
     button.disabled = true;
@@ -24,56 +29,37 @@ async function analyze() {
 
         if (data.status !== "success") {
             alert(data.message);
+            button.disabled = false;
+            button.innerHTML = "⚡ Analyze";
             return;
         }
 
         document.getElementById("pairName").innerText =
-            data.pair + " | " + data.timeframe;
+            displayPair + " | " + timeframe;
 
-        document.getElementById("price").innerText =
-            Number(data.price).toFixed(5);
-
-        document.getElementById("ema").innerText =
-            Number(data.ema50).toFixed(5);
-
-        document.getElementById("rsi").innerText =
-            Number(data.rsi).toFixed(2);
-
-        document.getElementById("macd").innerText =
-            Number(data.macd).toFixed(5);
-
-        document.getElementById("adx").innerText =
-            Number(data.adx).toFixed(2);
-
-        document.getElementById("cci").innerText =
-            Number(data.cci).toFixed(2);
-
-        document.getElementById("support").innerText =
-            Number(data.support).toFixed(5);
-
-        document.getElementById("resistance").innerText =
-            Number(data.resistance).toFixed(5);
-
-        document.getElementById("trend").innerText =
-            data.trend;
+        document.getElementById("price").innerText = Number(data.price).toFixed(5);
+        document.getElementById("ema").innerText = Number(data.ema50).toFixed(5);
+        document.getElementById("rsi").innerText = Number(data.rsi).toFixed(2);
+        document.getElementById("macd").innerText = Number(data.macd).toFixed(5);
+        document.getElementById("adx").innerText = Number(data.adx).toFixed(2);
+        document.getElementById("cci").innerText = Number(data.cci).toFixed(2);
+        document.getElementById("support").innerText = Number(data.support).toFixed(5);
+        document.getElementById("resistance").innerText = Number(data.resistance).toFixed(5);
+        document.getElementById("trend").innerText = data.trend;
 
         animateConfidence(data.confidence);
-
         updateSignal(data.trade);
-
         updateChart(pair, timeframe);
 
     } catch (e) {
 
-        alert("Server Error");
-
         console.log(e);
+        alert("Server Error");
 
     }
 
     button.disabled = false;
     button.innerHTML = "⚡ Analyze";
-
 }
 
 function updateSignal(signal) {
@@ -82,9 +68,7 @@ function updateSignal(signal) {
 
     box.innerHTML = signal;
 
-    box.classList.remove("buy");
-    box.classList.remove("sell");
-    box.classList.remove("wait");
+    box.className = "";
 
     if (signal === "BUY") {
 
@@ -99,7 +83,6 @@ function updateSignal(signal) {
         box.classList.add("wait");
 
     }
-
 }
 
 function animateConfidence(target) {
@@ -108,7 +91,9 @@ function animateConfidence(target) {
 
     const label = document.getElementById("confidence");
 
-    const timer = setInterval(() => {
+    clearInterval(window.confTimer);
+
+    window.confTimer = setInterval(() => {
 
         value++;
 
@@ -116,15 +101,16 @@ function animateConfidence(target) {
 
         if (value >= target) {
 
-            clearInterval(timer);
+            clearInterval(window.confTimer);
 
         }
 
-    }, 20);
-
+    }, 15);
 }
 
 function updateChart(pair, timeframe) {
+
+    pair = pair.replace(" OTC", "");
 
     const map = {
 
@@ -135,21 +121,32 @@ function updateChart(pair, timeframe) {
         "AUD/USD":"FX:AUDUSD",
         "USD/CAD":"FX:USDCAD",
         "USD/CHF":"FX:USDCHF",
+        "NZD/USD":"FX:NZDUSD",
+        "AUD/JPY":"FX:AUDJPY",
+        "GBP/JPY":"FX:GBPJPY",
         "BTC/USD":"BINANCE:BTCUSDT",
         "ETH/USD":"BINANCE:ETHUSDT",
         "XAU/USD":"OANDA:XAUUSD"
 
     };
 
+    const intervals = {
+
+        "M1":"1",
+        "M5":"5",
+        "M15":"15",
+        "M30":"30",
+        "H1":"60",
+        "H4":"240",
+        "D1":"D"
+
+    };
+
     const symbol = map[pair] || "FX:EURUSD";
+    const interval = intervals[timeframe] || "1";
 
     document.querySelector(".chart-box iframe").src =
-        `https://s.tradingview.com/widgetembed/?symbol=${symbol}&interval=1&theme=dark&style=1`;
-
+        `https://s.tradingview.com/widgetembed/?symbol=${symbol}&interval=${interval}&theme=dark&style=1&hide_top_toolbar=1&hide_side_toolbar=0`;
 }
 
-setInterval(() => {
-
-    analyze();
-
-}, 60000);
+setInterval(analyze, 60000);
