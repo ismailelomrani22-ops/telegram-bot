@@ -84,3 +84,55 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
     }
 
 });
+const marketSelect = document.getElementById("market");
+const pairSelect = document.getElementById("pair");
+
+const forexPairs = [
+    "EUR/USD",
+    "GBP/USD",
+    "USD/JPY",
+    "USD/CAD",
+    "AUD/USD",
+    "NZD/USD",
+    "EUR/JPY",
+    "EUR/GBP",
+    "GBP/JPY",
+    "XAU/USD"
+];
+
+const otcPairs = [
+    "EUR/USD OTC",
+    "GBP/USD OTC",
+    "USD/JPY OTC",
+    "USD/CAD OTC",
+    "AUD/USD OTC",
+    "NZD/USD OTC",
+    "EUR/JPY OTC",
+    "EUR/GBP OTC",
+    "GBP/JPY OTC",
+    "XAU/USD OTC"
+];
+
+function loadPairs() {
+
+    pairSelect.innerHTML = "";
+
+    const list = marketSelect.value === "OTC"
+        ? otcPairs
+        : forexPairs;
+
+    list.forEach(pair => {
+
+        const option = document.createElement("option");
+        option.value = pair;
+        option.textContent = pair;
+
+        pairSelect.appendChild(option);
+
+    });
+
+}
+
+marketSelect.addEventListener("change", loadPairs);
+
+loadPairs();
