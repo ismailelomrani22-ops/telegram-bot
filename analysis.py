@@ -1,160 +1,170 @@
-import time
 from data import get_market_data
 from indicators import calculate_indicators
+import pandas as pd
+import math
+
+
+def safe(v, default=0):
+    if v is None:
+        return default
+
+    try:
+        if math.isnan(float(v)):
+            return default
+    except:
+        pass
+
+    return float(v)
 
 
 def analyze_market(symbol, timeframe):
 
-    time.sleep(2)
-
     df = get_market_data(symbol, timeframe)
 
-    if df is None or len(df) < 200:
+    if df is None or len(df) < 220:
+
         return {
             "status": "error",
             "message": "Market data unavailable"
         }
 
     r = calculate_indicators(df)
-        print("INDICATORS:", r)
 
     buy = 0
     sell = 0
 
-    # ==========================
-    # TREND FILTER
-    # ==========================
+    price = safe(r["price"])
 
-    if r["ema50"] > r["ema100"] > r["ema200"]:
-        buy += 5
+    ema9 = safe(r["ema9"])
+    ema21 = safe(r["ema21"])
+    ema50 = safe(r["ema50"])
+    ema100 = safe(r["ema100"])
+    ema200 = safe(r["ema200"])
 
-    elif r["ema50"] < r["ema100"] < r["ema200"]:
-        sell += 5
+    rsi = safe(r["rsi"], 50)
 
-    else:
-        return {
-            "status": "success",
-            "pair": symbol,
-            "timeframe": timeframe,
-            "price": r["price"],
-            "trend": "SIDEWAYS",
-            "trade": "WAIT",
-            "confidence": 40
-        }
+    macd = safe(r["macd"])
+    signal = safe(r["signal"])
 
-    # ==========================
-    # ADX FILTER
-    # ==========================
+    adx = safe(r["adx"], 20)
 
-    if r["adx"] < 25:
-        return {
-            "status": "success",
-            "pair": symbol,
-            "timeframe": timeframe,
-            "price": r["price"],
-            "trend": "WEAK TREND",
-            "trade": "WAIT",
-            "confidence": 45
-        }
+    atr = safe(r["atr"])
 
-    # ==========================
+    cci = safe(r["cci"])
+
+    stoch_k = safe(r["stoch_k"], 50)
+    stoch_d = safe(r["stoch_d"], 50)
+
+    upper = safe(r["upper"])
+    lower = safe(r["lower"])
+
+    support = safe(r["support"], price)
+    resistance = safe(r["resistance"], price)
+        # ==========================
     # EMA
     # ==========================
 
-    if r["ema9"] > r["ema21"]:
+    if price > ema9:
+        buy += 2
+    else:
+        sell += 2
+
+    if ema9 > ema21:
         buy += 3
     else:
         sell += 3
 
-    # ==========================
-    # MACD
-    # ==========================
-
-    if r["macd"] > r["signal"]:
-        buy += 3
+    if ema21 > ema50:
+        buy += 2
     else:
-        sell += 3
+        sell += 2
+
+    if ema50 > ema100:
+        buy += 2
+    else:
+        sell += 2
+
+    if ema100 > ema200:
+        buy += 2
+    else:
+        sell += 2
 
     # ==========================
     # RSI
     # ==========================
 
-    if 50 <= r["rsi"] <= 68:
+    if rsi < 30:
+        buy += 4
+
+    elif rsi > 70:
+        sell += 4
+
+    elif rsi > 50:
         buy += 2
 
-    elif 32 <= r["rsi"] <= 50:
-        sell += 2
-        # ==========================
-    # CCI
-    # ==========================
-
-    if r["cci"] > 100:
-        buy += 2
-    elif r["cci"] < -100:
-        sell += 2
-
-    # ==========================
-    # Williams %R
-    # ==========================
-
-    if r["williams"] < -80:
-        buy += 2
-    elif r["williams"] > -20:
-        sell += 2
-
-    # ==========================
-    # Parabolic SAR
-    # ==========================
-
-    if r["price"] > r["psar"]:
-        buy += 2
     else:
         sell += 2
 
     # ==========================
-    # Bollinger Bands
+    # MACD
     # ==========================
 
-    if r["price"] <= r["lower"]:
-        buy += 1
-
-    if r["price"] >= r["upper"]:
-        sell += 1
+    if macd > signal:
+        buy += 4
+    else:
+        sell += 4
 
     # ==========================
-    # ATR FILTER
+    # ADX
     # ==========================
 
-    if r["atr"] < 0.0002:
-        return {
-            "status": "success",
-            "pair": symbol,
-            "timeframe": timeframe,
-            "price": r["price"],
-            "trend": "LOW VOLATILITY",
-            "trade": "WAIT",
-            "confidence": 40
-        }
+    if adx > 25:
+
+        if buy > sell:
+            buy += 3
+
+        else:
+            sell += 3
+
+    # ==========================
+    # CCI
+    # ==========================
+
+    if cci < -100:
+        buy += 2
+
+    elif cci > 100:
+        sell += 2
 
     # ==========================
     # STOCHASTIC
     # ==========================
 
-    if r["stoch_k"] > r["stoch_d"] and r["stoch_k"] < 80:
+    if stoch_k > stoch_d and stoch_k < 80:
+        buy += 3
+
+    elif stoch_k < stoch_d and stoch_k > 20:
+        sell += 3
+
+    # ==========================
+    # BOLLINGER
+    # ==========================
+
+    if lower != 0 and price <= lower:
         buy += 2
 
-    elif r["stoch_k"] < r["stoch_d"] and r["stoch_k"] > 20:
+    if upper != 0 and price >= upper:
         sell += 2
 
     # ==========================
     # SUPPORT / RESISTANCE
     # ==========================
 
-    if r["price"] <= r["support"] * 1.001:
-        buy += 2
+    if support != 0 and price <= support * 1.001:
+        buy += 3
 
-    if r["price"] >= r["resistance"] * 0.999:
-        sell += 2
+    if resistance != 0 and price >= resistance * 0.999:
+        sell += 3
 
     # ==========================
     # PRICE ACTION
@@ -164,10 +174,10 @@ def analyze_market(symbol, timeframe):
     prev = df.iloc[-2]
 
     if last["close"] > last["open"] and prev["close"] > prev["open"]:
-        buy += 3
+        buy += 4
 
     elif last["close"] < last["open"] and prev["close"] < prev["open"]:
-        sell += 3
+        sell += 4
         # ==========================
     # FINAL DECISION
     # ==========================
@@ -190,41 +200,42 @@ def analyze_market(symbol, timeframe):
         confidence = 50
 
     return {
+
         "status": "success",
+
         "pair": symbol,
         "timeframe": timeframe,
 
-        "price": round(r["price"], 5),
+        "price": round(price, 5),
 
-        "ema9": round(r["ema9"], 5),
-        "ema21": round(r["ema21"], 5),
-        "ema50": round(r["ema50"], 5),
-        "ema100": round(r["ema100"], 5),
-        "ema200": round(r["ema200"], 5),
+        "ema9": round(ema9, 5),
+        "ema21": round(ema21, 5),
+        "ema50": round(ema50, 5),
+        "ema100": round(ema100, 5),
+        "ema200": round(ema200, 5),
 
-        "rsi": round(r["rsi"], 2),
+        "rsi": round(rsi, 2),
 
-        "macd": round(r["macd"], 5),
-        "signal": round(r["signal"], 5),
+        "macd": round(macd, 5),
+        "signal": round(signal, 5),
 
-        "adx": round(r["adx"], 2),
-        "atr": round(r["atr"], 5),
+        "adx": round(adx, 2),
+        "atr": round(atr, 5),
 
-        "cci": round(r["cci"], 2),
-        "williams": round(r["williams"], 2),
+        "cci": round(cci, 2),
 
-        "psar": round(r["psar"], 5),
+        "stoch_k": round(stoch_k, 2),
+        "stoch_d": round(stoch_d, 2),
 
-        "stoch_k": round(r["stoch_k"], 2),
-        "stoch_d": round(r["stoch_d"], 2),
-
-        "support": round(r["support"], 5),
-        "resistance": round(r["resistance"], 5),
+        "support": round(support, 5),
+        "resistance": round(resistance, 5),
 
         "trend": trend,
         "trade": trade,
         "confidence": confidence,
+
         "buy_score": buy,
         "sell_score": sell,
         "score": score
+
     }
