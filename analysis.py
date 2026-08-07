@@ -1,8 +1,6 @@
-from data import get_market_data
-from indicators import calculate_indicators
-
-
 def analyze_market(symbol, timeframe):
+
+    symbol = symbol.replace(" OTC", "").replace("_OTC", "").strip()
 
     df = get_market_data(symbol, timeframe)
 
@@ -17,31 +15,26 @@ def analyze_market(symbol, timeframe):
     score_buy = 0
     score_sell = 0
 
-    # EMA
     if result["ema9"] > result["ema21"]:
         score_buy += 2
     else:
         score_sell += 2
 
-    # RSI
     if result["rsi"] < 35:
         score_buy += 1
     elif result["rsi"] > 65:
         score_sell += 1
 
-    # MACD
     if result["macd"] > result["signal"]:
         score_buy += 2
     else:
         score_sell += 2
 
-    # السعر فوق EMA9
     if result["price"] > result["ema9"]:
         score_buy += 1
     else:
         score_sell += 1
 
-    # قرب الدعم والمقاومة
     if result["price"] <= result["support"] * 1.001:
         score_buy += 1
 
@@ -50,15 +43,15 @@ def analyze_market(symbol, timeframe):
 
     if score_buy > score_sell:
         trend = "Bullish"
-        signal = "BUY"
+        trade = "BUY"
         confidence = min(98, 60 + score_buy * 6)
     elif score_sell > score_buy:
         trend = "Bearish"
-        signal = "SELL"
+        trade = "SELL"
         confidence = min(98, 60 + score_sell * 6)
     else:
         trend = "Neutral"
-        signal = "WAIT"
+        trade = "WAIT"
         confidence = 50
 
     return {
@@ -74,6 +67,6 @@ def analyze_market(symbol, timeframe):
         "support": result["support"],
         "resistance": result["resistance"],
         "trend": trend,
-        "trade": signal,
+        "trade": trade,
         "confidence": confidence
     }
