@@ -62,21 +62,42 @@ Professional AI Trading Signals
 
 <div class="controls">
 
+<div class="pair-box">
+
 <select id="pair">
 
-<option value="EUR/USD">🇪🇺 EUR/USD</option>
-<option value="GBP/USD">🇬🇧 GBP/USD</option>
-<option value="USD/JPY">🇯🇵 USD/JPY</option>
-<option value="EUR/JPY">🇪🇺🇯🇵 EUR/JPY</option>
-<option value="GBP/JPY">🇬🇧🇯🇵 GBP/JPY</option>
-<option value="AUD/USD">🇦🇺 AUD/USD</option>
-<option value="USD/CAD">🇨🇦 USD/CAD</option>
-<option value="USD/CHF">🇨🇭 USD/CHF</option>
-<option value="BTC/USD">₿ Bitcoin</option>
-<option value="ETH/USD">⟠ Ethereum</option>
-<option value="XAU/USD">🥇 Gold</option>
+<optgroup label="Forex">
+
+<option value="EUR/USD">🇪🇺🇺🇸 EUR/USD</option>
+<option value="GBP/USD">🇬🇧🇺🇸 GBP/USD</option>
+<option value="USD/JPY">🇺🇸🇯🇵 USD/JPY</option>
+<option value="USD/CAD">🇺🇸🇨🇦 USD/CAD</option>
+<option value="AUD/USD">🇦🇺🇺🇸 AUD/USD</option>
+<option value="NZD/USD">🇳🇿🇺🇸 NZD/USD</option>
+<option value="USD/CHF">🇺🇸🇨🇭 USD/CHF</option>
+
+</optgroup>
+
+<optgroup label="OTC">
+
+<option value="EUR/USD OTC">🇪🇺🇺🇸 EUR/USD OTC</option>
+<option value="GBP/USD OTC">🇬🇧🇺🇸 GBP/USD OTC</option>
+<option value="USD/JPY OTC">🇺🇸🇯🇵 USD/JPY OTC</option>
+<option value="USD/CAD OTC">🇺🇸🇨🇦 USD/CAD OTC</option>
+<option value="AUD/CHF OTC">🇦🇺🇨🇭 AUD/CHF OTC</option>
+<option value="CAD/CHF OTC">🇨🇦🇨🇭 CAD/CHF OTC</option>
+<option value="USD/BRL OTC">🇺🇸🇧🇷 USD/BRL OTC</option>
+<option value="USD/COP OTC">🇺🇸🇨🇴 USD/COP OTC</option>
+<option value="USD/INR OTC">🇺🇸🇮🇳 USD/INR OTC</option>
+<option value="KES/USD OTC">🇰🇪🇺🇸 KES/USD OTC</option>
+<option value="LBP/USD OTC">🇱🇧🇺🇸 LBP/USD OTC</option>
+<option value="NGN/USD OTC">🇳🇬🇺🇸 NGN/USD OTC</option>
+
+</optgroup>
 
 </select>
+
+</div>
 
 <select id="timeframe">
 
@@ -86,15 +107,12 @@ Professional AI Trading Signals
 <option>M30</option>
 <option>H1</option>
 <option>H4</option>
+<option>D1</option>
 
 </select>
 
 <button onclick="analyze()">
-
-<i class="fa-solid fa-chart-line"></i>
-
-Analyze
-
+⚡ Analyze
 </button>
 
 </div>
