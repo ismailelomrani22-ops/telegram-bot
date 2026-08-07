@@ -2,6 +2,7 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
 
     const pair = document.getElementById("pair").value;
     const timeframe = document.getElementById("timeframe").value;
+    const market = document.getElementById("market").value;
 
     const signal = document.getElementById("signal");
     const confidence = document.getElementById("confidence");
@@ -29,6 +30,9 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
             signal.innerHTML = "❌ ERROR";
             return;
         }
+
+        document.getElementById("pairName").innerHTML =
+            pair + (market === "OTC" ? " OTC" : "");
 
         document.getElementById("price").innerHTML = Number(data.price).toFixed(5);
         document.getElementById("ema9").innerHTML = Number(data.ema9).toFixed(5);
@@ -63,9 +67,8 @@ document.getElementById("signalBtn").addEventListener("click", async () => {
             time--;
             timer.innerHTML = "00:" + (time < 10 ? "0" + time : time);
 
-            if (time <= 0) {
-                clearInterval(window.countdown);
-            }
+            if (time <= 0) clearInterval(window.countdown);
+
         }, 1000);
 
     } catch (err) {
