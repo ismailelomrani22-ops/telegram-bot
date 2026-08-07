@@ -118,7 +118,15 @@ Open Telegram Bot
 </a>
 
 </div>
+</div>
 
+<a class="button" href="https://t.me/liamsi_ai_bot" target="_blank">
+🚀 Open Telegram Bot
+<a
+
+<footer>
+© 2026 Telegram Trading Bot
+</footer>
 <footer>
 © 2026 Telegram Trading Bot
 </footer>
