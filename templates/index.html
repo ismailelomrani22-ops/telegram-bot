@@ -18,40 +18,32 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <div class="container">
 
-<h1 class="logo">
+<div class="header">
+
+<h1>
 🤖 LIAMSI AI BOT
 </h1>
 
-<p class="subtitle">
+<p>
 Professional AI Trading Signals
 </p>
+
+</div>
 
 <div class="controls">
 
 <select id="pair">
 
-<option value="EUR/USD">🇪🇺 EUR/USD</option>
-<option value="GBP/USD">🇬🇧 GBP/USD</option>
-<option value="USD/JPY">🇯🇵 USD/JPY</option>
-<option value="EUR/JPY">🇪🇺🇯🇵 EUR/JPY</option>
-<option value="GBP/JPY">🇬🇧🇯🇵 GBP/JPY</option>
-<option value="AUD/USD">🇦🇺 AUD/USD</option>
-<option value="NZD/USD">🇳🇿 NZD/USD</option>
-<option value="USD/CAD">🇨🇦 USD/CAD</option>
-<option value="USD/CHF">🇨🇭 USD/CHF</option>
-<option value="EUR/GBP">🇪🇺🇬🇧 EUR/GBP</option>
-<option value="AUD/JPY">🇦🇺🇯🇵 AUD/JPY</option>
-<option value="CAD/JPY">🇨🇦🇯🇵 CAD/JPY</option>
-<option value="CHF/JPY">🇨🇭🇯🇵 CHF/JPY</option>
-<option value="EUR/AUD">🇪🇺🇦🇺 EUR/AUD</option>
-<option value="GBP/AUD">🇬🇧🇦🇺 GBP/AUD</option>
-
-<option value="XAU/USD">🥇 Gold (XAU/USD)</option>
-<option value="XAG/USD">🥈 Silver (XAG/USD)</option>
-
-<option value="BTC/USD">₿ Bitcoin</option>
-<option value="ETH/USD">⟠ Ethereum</option>
-<option value="SOL/USD">◎ Solana</option>
+<option>EUR/USD</option>
+<option>GBP/USD</option>
+<option>USD/JPY</option>
+<option>USD/CAD</option>
+<option>AUD/USD</option>
+<option>NZD/USD</option>
+<option>EUR/JPY</option>
+<option>CAD/JPY</option>
+<option>BTC/USD</option>
+<option>ETH/USD</option>
 
 </select>
 
@@ -68,7 +60,7 @@ Professional AI Trading Signals
 
 <button onclick="analyze()">
 
-<i class="fa-solid fa-chart-line"></i>
+<i class="fa-solid fa-bolt"></i>
 
 Analyze
 
@@ -76,57 +68,31 @@ Analyze
 
 </div>
 
-<div class="signal-panel">
+<div class="signal-box">
 
-<div class="circle">
+<h2 id="pair_name">
 
-<svg>
-
-<circle cx="90" cy="90" r="75"></circle>
-
-<circle
-cx="90"
-cy="90"
-r="75"
-id="progress">
-
-</circle>
-
-</svg>
-
-<div class="percent">
-
-<span id="confidence">
-
-0%
-
-</span>
-
-</div>
-
-</div>
-
-<div class="signal-info">
-
-<h2 id="pairName">
-
-EUR/USD
+EUR/USD | M1
 
 </h2>
 
-<h1 id="signal" class="wait">
+<div id="signal" class="buy">
 
-WAIT
+BUY
+
+</div>
+
+<h1 id="confidence">
+
+95%
 
 </h1>
 
 <p id="trend">
 
-Neutral
+STRONG BULLISH
 
 </p>
-
-</div>
 
 </div>
 
@@ -136,7 +102,7 @@ Neutral
 
 <h3>Price</h3>
 
-<p id="price">0.00000</p>
+<h2 id="price">0.00000</h2>
 
 </div>
 
@@ -144,7 +110,7 @@ Neutral
 
 <h3>EMA</h3>
 
-<p id="ema">0.00000</p>
+<h2 id="ema">0.00000</h2>
 
 </div>
 
@@ -152,7 +118,7 @@ Neutral
 
 <h3>RSI</h3>
 
-<p id="rsi">0</p>
+<h2 id="rsi">0</h2>
 
 </div>
 
@@ -160,7 +126,7 @@ Neutral
 
 <h3>MACD</h3>
 
-<p id="macd">0</p>
+<h2 id="macd">0</h2>
 
 </div>
 
@@ -168,7 +134,7 @@ Neutral
 
 <h3>ADX</h3>
 
-<p id="adx">0</p>
+<h2 id="adx">0</h2>
 
 </div>
 
@@ -176,7 +142,7 @@ Neutral
 
 <h3>CCI</h3>
 
-<p id="cci">0</p>
+<h2 id="cci">0</h2>
 
 </div>
 
@@ -184,7 +150,7 @@ Neutral
 
 <h3>Support</h3>
 
-<p id="support">0.00000</p>
+<h2 id="support">0</h2>
 
 </div>
 
@@ -192,7 +158,7 @@ Neutral
 
 <h3>Resistance</h3>
 
-<p id="resistance">0.00000</p>
+<h2 id="resistance">0</h2>
 
 </div>
 
@@ -203,5 +169,4 @@ Neutral
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
-
 </html>
