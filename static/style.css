@@ -1,103 +1,407 @@
-.signal-card{
-    background:#101828;
-    border:1px solid #23314d;
-    border-radius:20px;
-    padding:25px;
-    margin-top:20px;
-    text-align:center;
-    box-shadow:0 0 35px rgba(0,170,255,.25);
+/* ===========================
+   LIAMSI AI BOT
+   Premium Dark UI
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
-.signal-title{
-    color:#8fa6c9;
-    font-size:15px;
-    letter-spacing:2px;
-    margin-bottom:10px;
+body{
+
+background:
+linear-gradient(135deg,#07111d,#0b1b33,#101c3d);
+
+min-height:100vh;
+
+color:white;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:30px;
+
+overflow-x:hidden;
+
+}
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+width:700px;
+height:700px;
+
+background:#00ffb7;
+
+filter:blur(220px);
+
+opacity:.12;
+
+top:-250px;
+left:-250px;
+
+z-index:-1;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:600px;
+height:600px;
+
+background:#0084ff;
+
+filter:blur(220px);
+
+opacity:.10;
+
+bottom:-250px;
+right:-250px;
+
+z-index:-1;
+
+}
+
+.container{
+
+width:100%;
+max-width:1200px;
+
+}
+
+header{
+
+text-align:center;
+
+margin-bottom:35px;
+
+}
+
+.logo{
+
+font-size:38px;
+
+font-weight:800;
+
+letter-spacing:2px;
+
+color:#00ffd5;
+
+text-shadow:
+
+0 0 15px #00ffd5,
+0 0 30px #00ffd5,
+0 0 60px #00ffd5;
+
+}
+
+.subtitle{
+
+margin-top:10px;
+
+color:#b6c7e0;
+
+font-size:15px;
+
+}
+
+/* ========================= */
+
+.top-card{
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.15);
+
+border-radius:30px;
+
+padding:35px;
+
+text-align:center;
+
+box-shadow:
+
+0 20px 45px rgba(0,0,0,.45);
+
+margin-bottom:35px;
+
+transition:.35s;
+
+}
+
+.top-card:hover{
+
+transform:translateY(-5px);
+
 }
 
 .pair{
-    color:#ffffff;
-    font-size:28px;
-    font-weight:bold;
-    margin-bottom:20px;
+
+font-size:32px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+}
+
+.timeframe{
+
+color:#93b7ff;
+
+margin-bottom:18px;
+
 }
 
 .signal{
-    font-size:42px;
-    font-weight:bold;
-    border-radius:15px;
-    padding:18px;
-    transition:.3s;
+
+display:inline-block;
+
+padding:18px 70px;
+
+border-radius:50px;
+
+font-size:34px;
+
+font-weight:800;
+
+letter-spacing:2px;
+
+margin:20px 0;
+
 }
 
 .buy{
-    background:#00c853;
-    color:#fff;
-    box-shadow:0 0 30px #00ff66;
+
+background:#00d65f;
+
+box-shadow:
+
+0 0 20px #00d65f,
+0 0 45px #00d65f;
+
 }
 
 .sell{
-    background:#e53935;
-    color:#fff;
-    box-shadow:0 0 30px #ff3b3b;
+
+background:#ff3d4f;
+
+box-shadow:
+
+0 0 20px #ff3d4f,
+0 0 45px #ff3d4f;
+
 }
 
 .wait{
-    background:#ffb300;
-    color:#fff;
-    box-shadow:0 0 30px #ffd54f;
+
+background:#ffb100;
+
+box-shadow:
+
+0 0 20px #ffb100;
+
 }
 
 .confidence{
-    margin-top:20px;
-    font-size:38px;
-    font-weight:bold;
-    color:#4fc3f7;
+
+font-size:55px;
+
+font-weight:800;
+
+color:#00ffe1;
+
+margin-top:15px;
+
 }
 
 .countdown{
-    margin-top:18px;
-    font-size:20px;
-    color:#ffffff;
+
+margin-top:15px;
+
+font-size:18px;
+
+color:#8ad5ff;
+
 }
 
-#timer{
-    color:#00e5ff;
-    font-weight:bold;
+/* ========================= */
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+gap:22px;
+
+margin-bottom:35px;
+
 }
 
-button{
-    width:100%;
-    padding:18px;
-    margin-top:20px;
-    border:none;
-    border-radius:15px;
-    background:#0091ff;
-    color:white;
-    font-size:20px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
+.card{
+
+background:rgba(255,255,255,.07);
+
+backdrop-filter:blur(15px);
+
+border-radius:22px;
+
+padding:25px;
+
+border:1px solid rgba(255,255,255,.12);
+
+transition:.35s;
+
+box-shadow:
+
+0 15px 30px rgba(0,0,0,.35);
+
 }
 
-button:hover{
-    transform:scale(1.03);
-    box-shadow:0 0 25px #00b0ff;
+.card:hover{
+
+transform:translateY(-8px);
+
+border-color:#00ffe1;
+
+box-shadow:
+
+0 0 25px rgba(0,255,225,.35);
+
 }
 
-.box{
-    background:#15233d;
-    border-radius:15px;
-    padding:18px;
-    text-align:center;
-    color:white;
-    box-shadow:0 0 15px rgba(0,170,255,.15);
+.card h3{
+
+font-size:16px;
+
+color:#8fb9ff;
+
+margin-bottom:15px;
+
 }
 
-.box span{
-    display:block;
-    margin-top:10px;
-    font-size:22px;
-    color:#00e5ff;
-    font-weight:bold;
+.card p{
+
+font-size:26px;
+
+font-weight:700;
+
+color:white;
+
+}
+
+/* ========================= */
+
+.btn{
+
+width:100%;
+
+padding:20px;
+
+font-size:22px;
+
+font-weight:700;
+
+border:none;
+
+border-radius:18px;
+
+cursor:pointer;
+
+background:linear-gradient(90deg,#00e5ff,#00ff95);
+
+color:#001018;
+
+transition:.3s;
+
+box-shadow:
+
+0 0 25px #00ffe1;
+
+}
+
+.btn:hover{
+
+transform:scale(1.02);
+
+box-shadow:
+
+0 0 45px #00ffe1;
+
+}
+
+/* ========================= */
+
+::-webkit-scrollbar{
+
+width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#00ffe1;
+
+border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#08131d;
+
+}
+
+/* ========================= */
+
+@media(max-width:768px){
+
+.logo{
+
+font-size:28px;
+
+}
+
+.signal{
+
+font-size:26px;
+
+padding:16px 45px;
+
+}
+
+.confidence{
+
+font-size:42px;
+
+}
+
+.card p{
+
+font-size:22px;
+
+}
+
+.btn{
+
+font-size:18px;
+
+}
+
 }
