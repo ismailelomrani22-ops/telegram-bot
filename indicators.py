@@ -1,5 +1,5 @@
-from ta.trend import EMAIndicator, MACD, ADXIndicator
-from ta.momentum import RSIIndicator, StochasticOscillator
+from ta.trend import EMAIndicator, MACD, ADXIndicator, CCIIndicator, PSARIndicator
+from ta.momentum import RSIIndicator, StochasticOscillator, WilliamsRIndicator
 from ta.volatility import BollingerBands, AverageTrueRange
 
 
@@ -9,31 +9,77 @@ def calculate_indicators(df):
     high = df["high"]
     low = df["low"]
 
-    ema9 = EMAIndicator(close, window=9).ema_indicator().iloc[-1]
-    ema21 = EMAIndicator(close, window=21).ema_indicator().iloc[-1]
-    ema50 = EMAIndicator(close, window=50).ema_indicator().iloc[-1]
+    # EMA
+    ema9 = EMAIndicator(close=close, window=9).ema_indicator().iloc[-1]
+    ema21 = EMAIndicator(close=close, window=21).ema_indicator().iloc[-1]
+    ema50 = EMAIndicator(close=close, window=50).ema_indicator().iloc[-1]
 
-    rsi = RSIIndicator(close, window=14).rsi().iloc[-1]
+    # RSI
+    rsi = RSIIndicator(close=close, window=14).rsi().iloc[-1]
 
-    macd = MACD(close)
-
+    # MACD
+    macd = MACD(close=close)
     macd_line = macd.macd().iloc[-1]
     signal = macd.macd_signal().iloc[-1]
 
-    adx = ADXIndicator(high, low, close).adx().iloc[-1]
+    # ADX
+    adx = ADXIndicator(
+        high=high,
+        low=low,
+        close=close,
+        window=14
+    ).adx().iloc[-1]
 
-    stoch = StochasticOscillator(high, low, close)
+    # Stochastic
+    stoch = StochasticOscillator(
+        high=high,
+        low=low,
+        close=close,
+        window=14,
+        smooth_window=3
+    )
 
     stoch_k = stoch.stoch().iloc[-1]
     stoch_d = stoch.stoch_signal().iloc[-1]
 
-    bb = BollingerBands(close)
+    # Bollinger Bands
+    bb = BollingerBands(close=close)
 
     upper = bb.bollinger_hband().iloc[-1]
     lower = bb.bollinger_lband().iloc[-1]
 
-    atr = AverageTrueRange(high, low, close).average_true_range().iloc[-1]
+    # ATR
+    atr = AverageTrueRange(
+        high=high,
+        low=low,
+        close=close,
+        window=14
+    ).average_true_range().iloc[-1]
 
+    # CCI
+    cci = CCIIndicator(
+        high=high,
+        low=low,
+        close=close,
+        window=20
+    ).cci().iloc[-1]
+
+    # Williams %R
+    williams = WilliamsRIndicator(
+        high=high,
+        low=low,
+        close=close,
+        lbp=14
+    ).williams_r().iloc[-1]
+
+    # Parabolic SAR
+    psar = PSARIndicator(
+        high=high,
+        low=low,
+        close=close
+    ).psar().iloc[-1]
+
+    # Support / Resistance
     support = low.tail(20).min()
     resistance = high.tail(20).max()
 
@@ -60,12 +106,13 @@ def calculate_indicators(df):
 
         "atr": float(atr),
 
-        "support": float(support),
-        "resistance": float(resistance),
+        "cci": float(cci),
 
-        # مؤقتًا حتى لا يعطي analysis.py خطأ
-        "cci": 0.0,
-        "williams": 0.0,
-        "psar": float(close.iloc[-1])
+        "williams": float(williams),
+
+        "psar": float(psar),
+
+        "support": float(support),
+        "resistance": float(resistance)
 
     }
