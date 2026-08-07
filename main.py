@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return """
+    return """... HTML ..."""
     <html>
       <head>
         <title>Telegram Trading Bot</title>
