@@ -1,51 +1,80 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading Dashboard</title>
+    <title>AI Trading Bot</title>
 
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
 <div class="container">
 
-    <h1>📊 AI Trading Dashboard</h1>
+    <h1>🤖 AI Trading Bot</h1>
 
     <div class="card">
 
-        <label>زوج العملات</label>
+        <label>Market</label>
+        <select id="market">
+            <option value="forex">Forex</option>
+            <option value="otc">OTC</option>
+        </select>
 
+        <label>Currency Pair</label>
         <select id="pair">
             <option>EUR/USD</option>
             <option>GBP/USD</option>
             <option>USD/JPY</option>
-            <option>XAU/USD</option>
-            <option>BTC/USD</option>
+            <option>AUD/USD</option>
+            <option>USD/CAD</option>
         </select>
 
-        <label>الفريم</label>
-
+        <label>Timeframe</label>
         <select id="timeframe">
             <option>M1</option>
             <option>M5</option>
             <option>M15</option>
             <option>M30</option>
             <option>H1</option>
-            <option>H4</option>
         </select>
 
-        <button onclick="analyze()">
-            📊 تحليل
+        <button id="signalBtn">
+            ⚡ Get Signal
         </button>
 
     </div>
 
-    <div id="result" class="card">
-        <h2>📈 النتيجة</h2>
-        <p>اختر الزوج والفريم ثم اضغط على "تحليل".</p>
+    <div class="result">
+
+        <h2>Analysis</h2>
+
+        <div id="signal">---</div>
+
+        <p>EMA 9 :
+            <span id="ema9">--</span>
+        </p>
+
+        <p>EMA 21 :
+            <span id="ema21">--</span>
+        </p>
+
+        <p>RSI :
+            <span id="rsi">--</span>
+        </p>
+
+        <p>MACD :
+            <span id="macd">--</span>
+        </p>
+
+        <p>Support :
+            <span id="support">--</span>
+        </p>
+
+        <p>Resistance :
+            <span id="resistance">--</span>
+        </p>
+
     </div>
 
 </div>
