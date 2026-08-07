@@ -1,3 +1,7 @@
+from data import get_market_data
+from indicators import calculate_indicators
+
+
 def analyze_market(symbol, timeframe):
 
     symbol = symbol.replace(" OTC", "").replace("_OTC", "").strip()
