@@ -1,53 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>LIAMSI AI BOT</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 </head>
 
 <body>
 
 <div class="container">
 
-<header>
-
-<div class="logo">
+<h1 class="logo">
 🤖 LIAMSI AI BOT
-</div>
+</h1>
 
-<div class="subtitle">
+<p class="subtitle">
 Professional AI Trading Signals
+</p>
+
+<div class="controls">
+
+<input
+id="pair"
+type="text"
+value="EUR/USD"
+placeholder="Pair">
+
+<select id="timeframe">
+
+<option>M1</option>
+<option>M5</option>
+<option>M15</option>
+<option>M30</option>
+<option>H1</option>
+<option>H4</option>
+
+</select>
+
+<button onclick="analyze()">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Analyze
+
+</button>
+
 </div>
 
-</header>
+<div class="signal-panel">
 
-<div class="top-card">
+<div class="circle">
 
-<div class="pair">
+<svg>
+
+<circle cx="90" cy="90" r="75"></circle>
+
+<circle
+cx="90"
+cy="90"
+r="75"
+id="progress">
+
+</circle>
+
+</svg>
+
+<div class="percent">
+
+<span id="confidence">
+
+0%
+
+</span>
+
+</div>
+
+</div>
+
+<div class="signal-info">
+
+<h2 id="pairName">
+
 EUR/USD
-</div>
 
-<div class="timeframe">
-M5
-</div>
+</h2>
 
-<div class="signal buy">
-BUY
-</div>
+<h1 id="signal" class="wait">
 
-<div class="confidence">
-96%
-</div>
+WAIT
 
-<div class="countdown">
-Next Signal : 00:42
+</h1>
+
+<p id="trend">
+
+Neutral
+
+</p>
+
 </div>
 
 </div>
@@ -55,59 +112,75 @@ Next Signal : 00:42
 <div class="cards">
 
 <div class="card">
+
 <h3>Price</h3>
-<p id="price">1.15656</p>
+
+<p id="price">0.00000</p>
+
 </div>
 
 <div class="card">
-<h3>Trend</h3>
-<p id="trend">Bullish 📈</p>
-</div>
 
-<div class="card">
 <h3>EMA</h3>
-<p>Strong Buy</p>
+
+<p id="ema">0.00000</p>
+
 </div>
 
 <div class="card">
+
 <h3>RSI</h3>
-<p>56.38</p>
+
+<p id="rsi">0</p>
+
 </div>
 
 <div class="card">
+
 <h3>MACD</h3>
-<p>Positive</p>
+
+<p id="macd">0</p>
+
 </div>
 
 <div class="card">
+
 <h3>ADX</h3>
-<p>31.2</p>
+
+<p id="adx">0</p>
+
 </div>
 
 <div class="card">
+
 <h3>CCI</h3>
-<p>125</p>
+
+<p id="cci">0</p>
+
 </div>
 
 <div class="card">
+
 <h3>Support</h3>
-<p>1.15250</p>
+
+<p id="support">0.00000</p>
+
 </div>
 
 <div class="card">
+
 <h3>Resistance</h3>
-<p>1.15802</p>
-</div>
+
+<p id="resistance">0.00000</p>
 
 </div>
 
-<button class="btn">
-⚡ GET SIGNAL
-</button>
+</div>
 
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>
