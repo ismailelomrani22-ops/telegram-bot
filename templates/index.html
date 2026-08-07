@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,7 +8,8 @@
 
 <title>LIAMSI AI BOT</title>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -18,32 +20,61 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <div class="container">
 
-<div class="header">
+<!-- HEADER -->
 
-<h1>
+<header>
+
+<div class="logo">
+
 🤖 LIAMSI AI BOT
-</h1>
-
-<p>
-Professional AI Trading Signals
-</p>
 
 </div>
+
+<div class="subtitle">
+
+Professional AI Trading Signals
+
+</div>
+
+</header>
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+<div class="status">
+
+🟢 LIVE SERVER
+
+</div>
+
+<div class="balance">
+
+💰 Balance
+
+<span>$10,000</span>
+
+</div>
+
+</div>
+
+<!-- CONTROLS -->
 
 <div class="controls">
 
 <select id="pair">
 
-<option>EUR/USD</option>
-<option>GBP/USD</option>
-<option>USD/JPY</option>
-<option>USD/CAD</option>
-<option>AUD/USD</option>
-<option>NZD/USD</option>
-<option>EUR/JPY</option>
-<option>CAD/JPY</option>
-<option>BTC/USD</option>
-<option>ETH/USD</option>
+<option value="EUR/USD">🇪🇺 EUR/USD</option>
+<option value="GBP/USD">🇬🇧 GBP/USD</option>
+<option value="USD/JPY">🇯🇵 USD/JPY</option>
+<option value="EUR/JPY">🇪🇺🇯🇵 EUR/JPY</option>
+<option value="GBP/JPY">🇬🇧🇯🇵 GBP/JPY</option>
+<option value="AUD/USD">🇦🇺 AUD/USD</option>
+<option value="USD/CAD">🇨🇦 USD/CAD</option>
+<option value="USD/CHF">🇨🇭 USD/CHF</option>
+<option value="BTC/USD">₿ Bitcoin</option>
+<option value="ETH/USD">⟠ Ethereum</option>
+<option value="XAU/USD">🥇 Gold</option>
 
 </select>
 
@@ -60,7 +91,7 @@ Professional AI Trading Signals
 
 <button onclick="analyze()">
 
-<i class="fa-solid fa-bolt"></i>
+<i class="fa-solid fa-chart-line"></i>
 
 Analyze
 
@@ -68,39 +99,88 @@ Analyze
 
 </div>
 
-<div class="signal-box">
+<!-- TRADINGVIEW CHART -->
 
-<h2 id="pair_name">
+<div class="chart-box">
 
-EUR/USD | M1
+<iframe
 
-</h2>
+src="https://s.tradingview.com/widgetembed/?symbol=FX:EURUSD&interval=1&theme=dark&style=1"
 
-<div id="signal" class="buy">
+width="100%"
+
+height="420"
+
+
+frameborder="0"
+
+allowtransparency="true">
+
+</iframe>
+
+</div>
+
+<!-- SIGNAL PANEL -->
+
+<div class="signal-panel">
+
+<div class="pair-name" id="pairName">
+
+🇪🇺 EUR/USD | M1
+
+</div>
+
+<div id="signal" class="signal buy">
 
 BUY
 
 </div>
 
-<h1 id="confidence">
+<div class="confidence-box">
 
-95%
+<div class="confidence-value">
 
-</h1>
-
-<p id="trend">
-
-STRONG BULLISH
-
-</p>
+<span id="confidence">95</span>%
 
 </div>
+
+<div class="confidence-text">
+
+Confidence
+
+</div>
+
+</div>
+
+<div class="trend" id="trend">
+
+📈 Strong Bullish Trend
+
+</div>
+
+<div class="timer">
+
+⏳ Next Signal
+
+<span id="countdown">
+
+60
+
+</span>
+
+sec
+
+</div>
+
+</div>
+
+<!-- MARKET DATA -->
 
 <div class="cards">
 
 <div class="card">
 
-<h3>Price</h3>
+<h3>💲 Price</h3>
 
 <h2 id="price">0.00000</h2>
 
@@ -108,7 +188,7 @@ STRONG BULLISH
 
 <div class="card">
 
-<h3>EMA</h3>
+<h3>📈 EMA</h3>
 
 <h2 id="ema">0.00000</h2>
 
@@ -116,57 +196,120 @@ STRONG BULLISH
 
 <div class="card">
 
-<h3>RSI</h3>
+<h3>📊 RSI</h3>
 
-<h2 id="rsi">0</h2>
-
-</div>
-
-<div class="card">
-
-<h3>MACD</h3>
-
-<h2 id="macd">0</h2>
+<h2 id="rsi">0.00</h2>
 
 </div>
 
 <div class="card">
 
-<h3>ADX</h3>
+<h3>📉 MACD</h3>
 
-<h2 id="adx">0</h2>
-
-</div>
-
-<div class="card">
-
-<h3>CCI</h3>
-
-<h2 id="cci">0</h2>
+<h2 id="macd">0.00000</h2>
 
 </div>
 
 <div class="card">
 
-<h3>Support</h3>
+<h3>🔥 ADX</h3>
 
-<h2 id="support">0</h2>
+<h2 id="adx">0.00</h2>
 
 </div>
 
 <div class="card">
 
-<h3>Resistance</h3>
+<h3>⚡ CCI</h3>
 
-<h2 id="resistance">0</h2>
+<h2 id="cci">0.00</h2>
+
+</div>
+
+<div class="card">
+
+<h3>🟢 Support</h3>
+
+<h2 id="support">0.00000</h2>
+
+</div>
+
+<div class="card">
+
+<h3>🔴 Resistance</h3>
+
+<h2 id="resistance">0.00000</h2>
 
 </div>
 
 </div>
+
+<!-- MARKET STRENGTH -->
+
+<div class="market-strength">
+
+<h2>📊 Market Strength</h2>
+
+<div class="score-row">
+
+<div class="buy-score">
+
+🟢 BUY
+
+<span id="buyScore">
+
+0
+
+</span>
+
+</div>
+
+<div class="sell-score">
+
+🔴 SELL
+
+<span id="sellScore">
+
+0
+
+</span>
+
+</div>
+
+</div>
+
+<div class="progress-bar">
+
+<div id="strengthBar">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>
+
+© 2026 LIAMSI AI BOT
+
+</p>
+
+<p>
+
+AI Professional Trading Analysis
+
+</p>
+
+</footer>
 
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>
