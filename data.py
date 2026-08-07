@@ -14,12 +14,22 @@ TIMEFRAME_MAP = {
     "D1": "1day"
 }
 
+SYMBOLS = {
+    "EUR/USD": "EUR/USD",
+    "GBP/USD": "GBP/USD",
+    "AUD/USD": "AUD/USD",
+    "NZD/USD": "NZD/USD",
+    "USD/JPY": "USD/JPY",
+    "USD/CAD": "USD/CAD",
+    "USD/CHF": "USD/CHF",
+    "XAU/USD": "XAU/USD",
+}
+
 
 def get_market_data(symbol, timeframe):
-
     interval = TIMEFRAME_MAP.get(timeframe, "1min")
 
-    symbol = symbol.replace("/", "")
+    symbol = SYMBOLS.get(symbol, symbol)
 
     url = (
         f"https://api.twelvedata.com/time_series"
@@ -30,21 +40,18 @@ def get_market_data(symbol, timeframe):
     )
 
     try:
-
         r = requests.get(url, timeout=15)
         data = r.json()
 
+        print(data)
+
         if "values" not in data:
-            print(data)
             return None
 
         df = pd.DataFrame(data["values"])
-
         df = df.iloc[::-1].reset_index(drop=True)
 
-        cols = ["open", "high", "low", "close"]
-
-        for c in cols:
+        for c in ["open", "high", "low", "close"]:
             df[c] = df[c].astype(float)
 
         return df
