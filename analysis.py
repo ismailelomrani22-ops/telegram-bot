@@ -1,3 +1,9 @@
+import time
+from data import get_market_data
+from indicators import calculate_indicators
+
+
+def analyze_market(symbol, timeframe):
 # ==========================
 # فلتر الاتجاه العام
 # ==========================
